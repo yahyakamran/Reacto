@@ -1,11 +1,14 @@
-import {createElement} from "react";
-import {createRoot} from "react-dom/client";
-const App = <h1 title="conponent">I am component</h1>
-const element = createElement(
-    "p",
-    {title : "isit"},
-    "paragraph"
-);
-const root = createRoot(document.getElementById("root"));
-root.render(element)
+const element = {
+    type : "h1",
+    props: {
+        title    : "Foo",
+        children : "bar",
+    },
+};
+const node = document.createElement(element.type);
+node["title"] = element.props.title;
+const text = document.createTextNode(element.props.children);
+node.appendChild(text)
+const root = document.getElementById("root");
+root.appendChild(node)
 
