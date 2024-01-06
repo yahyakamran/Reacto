@@ -15,8 +15,6 @@ const root = document.getElementById("root");
 root.appendChild(node)*/
 
 
-import {createRoot} from "react-dom/client";
-
 function createTextElement(text){
     return{
         type  : "TEXT_ELEMENT",
@@ -33,7 +31,7 @@ function createElement( type , props , ...children ){
         props : {
             ...props,
                 children : children.map(child =>
-                typeof child == "object"
+                typeof child === "object"
                 ? child
                 : createTextElement(child)
             ),
@@ -41,17 +39,34 @@ function createElement( type , props , ...children ){
     }
 }
 
+function render(element,root){
+    let dom = element.type === "TEXT_ELEMENT"
+                ? document.createTextNode("")
+                : document.createElement(element.type)
+    const isProperty = (key) => key !== "children"
+    Object.keys(element.props)
+          .filter(isProperty)
+          .forEach(name =>
+                dom[name] = element.props[name]
+          )
+        element
+        .props
+        .children
+        .forEach(child =>
+            render(child , dom)
+        )
+    root.append(dom);
+}
+
 const Reacto = {
     createElement,
+    render,
 }
-/** @jsx Reacto.createElement */
 const element = Reacto.createElement(
-    <div id="bar" >
-        <p>foo</p>
-        <a/>
-    </div>
+  "div",
+  { id: "foo" },
+  Reacto.createElement("a", null, "bar"),
+  Reacto.createElement("b")
 );
-const root = createRoot(document.getElementById("root"));
-root.render(element)
-
-
+const root = document.getElementById("root");
+Reacto.render(element,root)

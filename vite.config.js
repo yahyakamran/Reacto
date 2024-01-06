@@ -13,7 +13,7 @@ export default {
   },
   server: {
     // You can customize the server settings
-    port: 3000,
+    port: 6969,
     open: true,
   },
 };
